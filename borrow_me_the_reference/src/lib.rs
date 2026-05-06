@@ -1,48 +1,37 @@
 pub fn delete_and_backspace(s: &mut String) {
-    let mut chars: Vec<char> = s.chars().collect();
-    let mut i = 0;
+    let mut result = String::new();
+    let mut skip = 0;
 
-    while i < chars.len() {
-        if chars[i] == '-' {
-            chars.remove(i);
-
-            if i > 0 {
-                i -= 1;
-                chars.remove(i);
+    for ch in s.chars() {
+        match ch {
+            '+' => skip += 1,
+            '-' => { result.pop(); }
+            _ => {
+                if skip > 0 {
+                    skip -= 1;
+                } else {
+                    result.push(ch);
+                }
             }
-        } else if chars[i] == '+' {
-            chars.remove(i);
-
-            if i < chars.len() {
-                chars.remove(i);
-            }
-        } else {
-            i += 1;
         }
     }
-
-    *s = chars.into_iter().collect();
+    *s = result;
 }
 
 pub fn do_operations(v: &mut [String]) {
-    for operation in v.iter_mut() {
-        if operation.contains('+') {
-            let parts: Vec<&str> = operation.split('+').collect();
-
-            let left: i32 = parts[0].parse().unwrap();
-            let right: i32 = parts[1].parse().unwrap();
-
-            *operation = (left + right).to_string();
-        } else if operation.contains('-') {
-            let parts: Vec<&str> = operation.split('-').collect();
-
-            let left: i32 = parts[0].parse().unwrap();
-            let right: i32 = parts[1].parse().unwrap();
-
-            *operation = (left - right).to_string();
+    for s in v.iter_mut() {
+        if let Some(i) = s.find('+') {
+            let left: i32  = s[..i].parse().unwrap();
+            let right: i32 = s[i+1..].parse().unwrap();
+            *s = (left + right).to_string();
+        } else if let Some(i) = s.find('-') {
+            let left: i32  = s[..i].parse().unwrap();
+            let right: i32 = s[i+1..].parse().unwrap();
+            *s = (left - right).to_string();
         }
     }
 }
+
 
 #[cfg(test)]
 mod tests {
