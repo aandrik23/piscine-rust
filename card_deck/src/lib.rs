@@ -1,9 +1,9 @@
 use rand::Rng;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Suit { Heart, Diamond, Spade, Club }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Rank { Ace, King, Queen, Jack, Number(u8) }
 
 impl Suit {
