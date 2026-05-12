@@ -1,6 +1,6 @@
-mod err;
+pub mod err;
+pub use err::{ParseErr, ReadErr};
 
-use err::{ParseErr, ReadErr};
 use std::error::Error;
 
 #[derive(Debug, Eq, PartialEq)]
@@ -29,7 +29,6 @@ impl TodoList {
         })?;
 
         let title = parsed["title"].as_str().unwrap_or("").to_string();
-
         let tasks_json = &parsed["tasks"];
 
         if tasks_json.is_empty() {
