@@ -49,11 +49,10 @@ pub fn check_for_securities(
     let total_size: u64 = mall
         .floors
         .values()
-        .flat_map(|floor| floor.stores.values())
-        .map(|store| store.square_meters)
+        .map(|floor| floor.size_limit)
         .sum();
 
-    let needed_guards = (total_size as usize + 199) / 200;
+    let needed_guards = total_size as usize / 200;
 
     for (name, guard) in available_guards {
         if mall.guards.len() >= needed_guards {
