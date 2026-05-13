@@ -55,10 +55,11 @@ pub fn check_for_securities(
 
     let needed_guards = (total_size as usize + 199) / 200;
 
-    for (name, guard) in available_guards.into_iter() {
-        if mall.guards.len() == needed_guards {
-            return;
+    for (name, guard) in available_guards {
+        if mall.guards.len() >= needed_guards {
+            break;
         }
+
         mall.hire_guard(name, guard);
     }
 }
