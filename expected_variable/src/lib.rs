@@ -1,35 +1,19 @@
-use case::CaseExt;
-
-fn edit_distance(a: &str, b: &str) -> usize {
-    let mut differences = 0;
-
-    let min_len = a.len().min(b.len());
-
-    for (c1, c2) in a.chars().take(min_len).zip(b.chars()) {
-        if c1 != c2 {
-            differences += 1;
-        }
-    }
-
-    differences + a.len().max(b.len()) - min_len
-}
+use convert_case::{Case, Casing};
+use edit_distance::edit_distance;
 
 pub fn expected_variable(compare: &str, expected: &str) -> Option<String> {
-    if !compare.is_camel() && !compare.is_snake() {
-        return None;
-    }
-
     let compare = compare.to_lowercase();
     let expected = expected.to_lowercase();
 
+    if !compare.is_case(Case::Camel) && !compare.is_case(Case::Snake) {
+        return None;
+    }
+
     let distance = edit_distance(&compare, &expected);
 
-    let max_len = expected.len().max(compare.len());
-
-    let similarity = ((max_len - distance) * 100) / max_len;
-
-    if similarity > 50 {
-        Some(format!("{}%", similarity))
+    let percentage = 100 - (distance * 100 / expected.len()).min(100);
+    if percentage >= 50 {
+        Some(format!("{percentage}%"))
     } else {
         None
     }
