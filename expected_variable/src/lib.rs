@@ -1,22 +1,19 @@
-use case::CaseExt;
+use convert_case::{Case, Casing};
+use edit_distance::edit_distance;
 
 pub fn expected_variable(compare: &str, expected: &str) -> Option<String> {
-    let compare_lower = compare.to_lowercase();
-    let expected_lower = expected.to_lowercase();
+    let compare = compare.to_lowercase();
+    let expected = expected.to_lowercase();
 
-    let is_camel = compare_lower == compare_lower.to_camel();
-    let is_snake = compare_lower == compare_lower.to_snake();
-
-    if !is_camel && !is_snake {
+    if !compare.is_case(Case::Camel) && !compare.is_case(Case::Snake) {
         return None;
     }
 
-    let distance = edit_distance::edit_distance(&compare_lower, &expected_lower);
+    let distance = edit_distance(&compare, &expected);
 
-    let percentage = 100 - (distance * 100 / expected_lower.len()).min(100);
-
-    if percentage > 50 {
-        Some(format!("{}%", percentage))
+    let percentage = 100 - (distance * 100 / expected.len()).min(100);
+    if percentage >= 50 {
+        Some(format!("{percentage}%"))
     } else {
         None
     }
