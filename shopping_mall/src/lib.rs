@@ -43,23 +43,24 @@ pub fn nbr_of_employees(mall: &Mall) -> usize {
 }
 
 pub fn check_for_securities(
-    mall: &mut Mall,
-    mut available_guards: HashMap<String, Guard>,
-) {
-    let total_size: u64 = mall
-        .floors
-        .values()
-        .flat_map(|floor| floor.stores.values())
-        .map(|store| store.square_meters)
-        .sum();
+        mall: &mut Mall,
+        available_guards: HashMap<String, Guard>,
+    ) {
+        let total_size: u64 = mall
+            .floors
+            .values()
+            .flat_map(|floor| floor.stores.values())
+            .map(|store| store.square_meters)
+            .sum();
 
-    let needed_guards = (total_size as f64 / 200.0).ceil() as usize;
+        let needed_guards = (total_size as f64 / 200.0).ceil() as usize;
 
-    let missing_guards = needed_guards.saturating_sub(mall.guards.len());
-
-    for (name, guard) in available_guards.drain().take(missing_guards) {
-        mall.hire_guard(name, guard);
-    }
+        for (name, guard) in available_guards {
+            if mall.guards.len() >= needed_guards {
+                break;
+            }
+            mall.hire_guard(name, guard);
+        }
 }
 
 pub fn cut_or_raise(mall: &mut Mall) {
