@@ -1,6 +1,6 @@
 pub fn talking(text: &str) -> &str {
     if text.is_empty() {
-        return "Just say somthing!";
+        return "Just say something!";
     }
 
     let is_question = text.ends_with('?');
