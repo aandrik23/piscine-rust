@@ -17,11 +17,11 @@ impl GameSession {
     }
 
     pub fn read_winner(&self) -> Option<&(String, u32)> {
-        let needed_score = self.nb_games / 2 + 1;
+        let max_score = self.nb_games / 2 + 1;
 
-        if self.p1.1 >= needed_score {
+        if self.p1.1 == max_score {
             Some(&self.p1)
-        } else if self.p2.1 >= needed_score {
+        } else if self.p2.1 == max_score {
             Some(&self.p2)
         } else {
             None
@@ -35,11 +35,13 @@ impl GameSession {
 
         if self.p1.0 == user_name {
             self.p1.1 += 1;
-        } else if self.p2.0 == user_name {
+        }
+
+        if self.p2.0 == user_name {
             self.p2.1 += 1;
         }
     }
-
+    
     pub fn delete(self) -> String {
         format!("game deleted: id -> {}", self.id)
     }
