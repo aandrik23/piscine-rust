@@ -8,25 +8,26 @@ pub trait Scalar: Copy + Add<Output = Self> + Mul<Output = Self> {
     fn one() -> Self;
 }
 
-impl Scalar for i32 {
-    fn zero() -> Self {
-        0
-    }
+macro_rules! impl_scalar {
+    ($type:ty, $zero:expr, $one:expr) => {
+        impl Scalar for $type {
+            fn zero() -> Self {
+                $zero
+            }
 
-    fn one() -> Self {
-        1
-    }
+            fn one() -> Self {
+                $one
+            }
+        }
+    };
 }
 
-impl Scalar for f64 {
-    fn zero() -> Self {
-        0.0
-    }
-
-    fn one() -> Self {
-        1.0
-    }
-}
+impl_scalar!(u32, 0, 1);
+impl_scalar!(u64, 0, 1);
+impl_scalar!(i32, 0, 1);
+impl_scalar!(i64, 0, 1);
+impl_scalar!(f32, 0.0, 1.0);
+impl_scalar!(f64, 0.0, 1.0);
 
 #[derive(Debug, PartialEq)]
 pub struct Vector<T: Scalar>(pub Vec<T>);
